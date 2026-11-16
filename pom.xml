@@ -1,6 +1,3 @@
-<!-- This file lists the dependencies java needs -->
-<!-- Instead, we'd have to manually download every file that Vs would reference-->
-
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -39,3 +36,6 @@
         </dependency>
     </dependencies>
 </project>
+
+<!-- This file lists the dependencies java needs -->
+<!-- Instead, we'd have to manually download every file that Vs would reference-->
