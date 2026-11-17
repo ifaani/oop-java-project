@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+<!-- This section tells VS code and Maven which pom rules version to use-->
+
+    <!-- This is the org/project name backwards-->
+    <groupId>com.clubmanager</groupId>
+    <!-- This is the actual app name-->
+    <artifactId>club-manager</artifactId>
+    <!--Version number of the project-->
+    <version>1.0</version>
+
+    <properties>
+    <!--Java development kit versions-->
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        
+        <!-- Tells VS code not to scramble emojis/fonts across different machines-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <!-- We're using swing for the UI, so this makes it's apps look better than standard windows -->
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.5.4</version>
+        </dependency>
+        <!-- MySQL driver: the driver that let's Java communicate to mysql -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.4.0</version>
+        </dependency>
+    </dependencies>
+</project>
+
+<!-- This file lists the dependencies java needs -->
+<!-- Instead, we'd have to manually download every file that Vs would reference-->
