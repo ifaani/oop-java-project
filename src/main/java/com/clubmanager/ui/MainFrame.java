@@ -33,8 +33,8 @@ public class MainFrame extends JFrame {
 
         // This is the card that communicates with the dao to enable CRUD operations to run on the database 
         content.setBackground(Theme.BACKGROUND); 
-        content.add(placeholderPage("Events"), "events");
-        content.add(placeholderPage("Payments"), "payments");
+        content.add(new EventsPanel(), "events");
+        content.add(new PaymentsPanel(), "payments");
         add(content, BorderLayout.CENTER);
 
         //page that runs when the app starts
@@ -109,15 +109,6 @@ public class MainFrame extends JFrame {
             boolean active = entry.getKey().equals(pageName);
             entry.getValue().setBackground(active ? Theme.ACCENT : Theme.SIDEBAR);
         }
-    }
-
-    // So this is a placeholder page for before creating the other pages, this enables it not to crash when selected
-    private JPanel placeholderPage(String title) {
-        JPanel page = new JPanel(new BorderLayout());
-        page.setBackground(Theme.BACKGROUND);
-        page.setBorder(BorderFactory.createEmptyBorder(24, 24, 24, 24));
-        page.add(Theme.title(title), BorderLayout.NORTH);
-        return page;
     }
 }
 

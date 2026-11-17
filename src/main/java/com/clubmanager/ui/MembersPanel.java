@@ -39,12 +39,12 @@ public class MembersPanel extends JPanel {
         // so this styles the page that displays all the members IN TABLE FORMAT
 
         // NORTH styling
-        // so the north area is now a small panel instead of just the title: the heading sits on the left (WEST) and a Refresh button sits on the right (EAST)
+        // this enables the north area to be a small panel instead of just the title. The heading sits on the left and a Refresh button sits on the right (EAST)
         JPanel north = new JPanel(new BorderLayout());
         north.setOpaque(false);   // see-through, so the page background shows
         north.add(titleLabel, BorderLayout.WEST);
 
-        // so this is the Refresh button, clicking it runs loadMembers() again which asks MySQL for the members all over again, that's the READ operation you can trigger on demand
+        // this code creates thhe refresh button to enable read operation of CRUD, it calls loadmembers function fetched the data from the database and displays it
         JButton refreshButton = Theme.secondaryButton("Refresh");
         refreshButton.addActionListener(e -> loadMembers());
         north.add(refreshButton, BorderLayout.EAST);
@@ -61,9 +61,9 @@ public class MembersPanel extends JPanel {
         table = new JTable(tableModel);
         styleTable();
 
-        // so this listens for the user clicking a row in the table, when they do, that member's details are copied into the form so they can be edited (Update) or removed (Delete)
+        //this is a listener function, basically it waits for a user to do something which in this case, when a user clicks, it loads the details of the particular member in the form for them to update or delete
         table.getSelectionModel().addListSelectionListener(e -> {
-            // so while the mouse is still moving the selection is "adjusting", we wait until it settles so this doesn't run twice for one click
+            // here, while the mouse is still moving the selection is "adjusting", we wait until it settles so this doesn't run twice for one click
             if (!e.getValueIsAdjusting()) {
                 fillFormFromSelectedRow();
             }
@@ -75,7 +75,7 @@ public class MembersPanel extends JPanel {
 
         // FORM styling
         JPanel east = new JPanel(new BorderLayout());
-        east.setOpaque(false);   // see-through, so the page background shows
+        east.setOpaque(false);   // makes it transparent, so the page background shows
         east.setBorder(BorderFactory.createEmptyBorder(0, 16, 0, 0));
         east.add(buildForm(), BorderLayout.NORTH);
         add(east, BorderLayout.EAST);
@@ -99,11 +99,11 @@ public class MembersPanel extends JPanel {
         table.getColumnModel().getColumn(0).setMaxWidth(60);           // narrow ID column
         table.getColumnModel().getColumn(2).setMaxWidth(70);           // narrow Year column
     }
-    // this one actually builds the form for signing up a new member and sets its dimensions
+    // this one actually builds and styles the form for signing up a new member and sets its dimensions
     private JPanel buildForm() {
         JPanel form = Theme.card();
         form.setLayout(new BoxLayout(form, BoxLayout.Y_AXIS));
-        form.setPreferredSize(new Dimension(300, 540));   // so this went from 560 to 540 (and the field heights/gaps below got a bit smaller) so the extra Update and Delete buttons still fit in the window
+        form.setPreferredSize(new Dimension(300, 540));   
 
         JLabel heading = new JLabel("Member details");
         heading.setFont(new Font("Segoe UI", Font.BOLD, 18));
@@ -112,7 +112,7 @@ public class MembersPanel extends JPanel {
         form.add(heading);
         form.add(Box.createVerticalStrut(16));
 
-        // readis the input fields to receive data passed into the db
+        // reads the input fields to receive data passed into the db
         addField(form, "Full name", nameField);
         addField(form, "Year of study", yearField);
         addField(form, "Course", courseField);
@@ -122,8 +122,8 @@ public class MembersPanel extends JPanel {
 
         // Buttons side by side
         JButton addButton = Theme.primaryButton("Add");
-        // so these two are the new buttons, Update saves the changes made to the selected member and Delete removes the selected member (Delete is red so people think twice)
-        JButton updateButton = Theme.primaryButton("Update");
+        // this uses Swing's Jbutton to create buttons for deleting and updating records, with event listeners factored in 
+        JButton updateButton = Theme.successButton("Update");
         JButton deleteButton = Theme.dangerButton("Delete");
         JButton clearButton = Theme.secondaryButton("Clear");
         addButton.addActionListener(e -> addMember());
@@ -132,7 +132,7 @@ public class MembersPanel extends JPanel {
         clearButton.addActionListener(e -> clearForm());
 
         // a section for the buttons to be styled side by side
-        JPanel buttons = new JPanel(new GridLayout(2, 2, 8, 8));   // 2 rows, 2 columns, 8px gaps (it was 1 row, 2 columns, 8px gap before we added Update and Delete, four buttons need two rows to fit)
+        JPanel buttons = new JPanel(new GridLayout(2, 2, 8, 8));
         buttons.setOpaque(false);
         buttons.setAlignmentX(Component.LEFT_ALIGNMENT);
         buttons.setMaximumSize(new Dimension(Integer.MAX_VALUE, 96));   // taller than before (44) because there are now two rows of buttons
@@ -151,15 +151,15 @@ public class MembersPanel extends JPanel {
         JLabel label = Theme.fieldLabel(labelText);
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
         field.setAlignmentX(Component.LEFT_ALIGNMENT);
-        field.setPreferredSize(new Dimension(200, 32));            // so the field height went from 36 to 32 to save vertical space
+        field.setPreferredSize(new Dimension(200, 32));         
         field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 32));
         form.add(label);
         form.add(Box.createVerticalStrut(4));
         form.add(field);
-        form.add(Box.createVerticalStrut(6));                      // and the gap under each field went from 10 to 6, same reason
+        form.add(Box.createVerticalStrut(6));                  
     }
 
-   // so this function asks the databse for all the members in teh db and siplays them in the table styled above
+   // so this function asks the databse for all the members in teh db and displays them in the table styled above
     private void loadMembers() {
         try {
             tableModel.setRowCount(0);   // wipe the old rows
@@ -169,10 +169,10 @@ public class MembersPanel extends JPanel {
                         m.getEmail(), m.getDateJoined(), m.getCandidateGroup()
                 });
             }
-            // so once the table is filled we count the rows and show the number in the heading e.g. "Members (3)", that's quick visible proof the READ worked
+            // so once the table is filled, getRowCount function counts the rows and show the total in the heading
             titleLabel.setText("Members (" + tableModel.getRowCount() + ")");
         } catch (SQLException ex) {
-            // so if MySQL is off, the password is wrong etc we land here instead of the app crashing, and the user gets a friendly popup
+            // error handling such that, if the password is wrong or msql is off or something, a popup is diplayed describing the exact error 
             showDatabaseError(ex, "loading the members");
         }
     }
@@ -180,30 +180,32 @@ public class MembersPanel extends JPanel {
     //function for adding a member through the form, so it adds a member through the form then passes that member into the database
     private void addMember() {
         try {
-            // so the form is read AND checked inside buildMemberFromForm(), if anything is wrong it throws and we jump straight to the catch below, so dao.add() never runs with bad data
+            // this reads the form data input by the user, and if any input is incorrect, it displays a popup explaining the error so that a member is never added with bad data
             dao.add(buildMemberFromForm(0));   // 0 = a new member, MySQL will give it a real id
             loadMembers();
             clearForm();
         } catch (IllegalArgumentException ex) {
-            // so this catches the Validator's complaints (empty field, wrong type etc), we keep the form as it is so the user can fix the mistake without retyping everything
+            // if a user leaves a field empty or enters incorrect format, it displays a popup with the error while leaving everything else in the form filled to prevent re-typing
+
+            // this is specifically for user input
             showValidationError(ex.getMessage());
         } catch (SQLException ex) {
-            // so this catches database problems, like a duplicate email or MySQL being off
+            // and this is specifically for database errors
             showDatabaseError(ex, "saving the new member");
         }
     }
 
-    // so this is the UPDATE operation, it works like addMember() but the Member it builds carries the id of the selected row, and that id ends up in the SQL "WHERE member_id = ?" so only that one row changes
+    // so this is the UPDATE operation, it works like add operation, but carries whatever changes to the selected member id, so it changes the specifc row without adding a new member
     private void updateMember() {
         int id = selectedMemberId();
-        if (id == -1) return;   // nothing was selected, selectedMemberId() already told the user, so we just stop
+        if (id == -1) return;   // this handles errors when nothing is selected for updation, so it just stops
 
         try {
             dao.update(buildMemberFromForm(id));
             loadMembers();
             clearForm();
         } catch (IllegalArgumentException ex) {
-            showValidationError(ex.getMessage());   // bad input, same as in addMember()
+            showValidationError(ex.getMessage());   
         } catch (SQLException ex) {
             showDatabaseError(ex, "updating the member");
         }
@@ -214,7 +216,7 @@ public class MembersPanel extends JPanel {
         int id = selectedMemberId();
         if (id == -1) return;   // nothing selected, stop
 
-        // so we read the name from the selected row (column 1) so the popup says "Delete Juma Kauma?" instead of something generic
+        // this function reads the name of the selected person to be deleted, so it displays a popup with the member's name who is to be deleted
         String name = String.valueOf(tableModel.getValueAt(table.getSelectedRow(), 1));
         int choice = JOptionPane.showConfirmDialog(
                 this,
@@ -223,7 +225,7 @@ public class MembersPanel extends JPanel {
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE);
 
-        // so showConfirmDialog returns which button was clicked, we only go ahead if it was Yes, clicking No or the X does nothing
+        
         if (choice == JOptionPane.YES_OPTION) {
             try {
                 dao.delete(id);
@@ -235,7 +237,7 @@ public class MembersPanel extends JPanel {
         }
     }
 
-    // so this reads the six text boxes, CHECKS each one with the Validator, converts them to the right types and builds a Member with the given id
+    // so this reads the six text boxes when a user is inputting data, CHECKS each one against the Validator, converts them to the right types if wrong and builds a Member with the given id
     // it's used by both Add and Update so the checking is written in ONE place only
     // the arguments are checked from top to bottom so the user is told about the first wrong field first
     private Member buildMemberFromForm(int id) {
@@ -249,7 +251,7 @@ public class MembersPanel extends JPanel {
                 Validator.parseGroup(groupField.getText()));
     }
 
-    // so this finds which row is selected and returns that member's id (it's stored in column 0), if no row is selected it shows a message and returns -1 as a signal for "nothing selected"
+    // so this finds which row is selected and returns that member's id, if no row is selected it shows a message and returns -1 as a signal for "nothing selected"
     private int selectedMemberId() {
         int row = table.getSelectedRow();   // getSelectedRow() gives -1 when nothing is selected
         if (row == -1) {
@@ -262,10 +264,10 @@ public class MembersPanel extends JPanel {
         return (int) tableModel.getValueAt(row, 0);   // column 0 holds the ID
     }
 
-    // so this copies the clicked row's values into the form fields, it's what runs when you click a row
+    // so for this function, when one clicks a row, it loads their data into the form fields respectively to enable editing
     private void fillFormFromSelectedRow() {
         int row = table.getSelectedRow();
-        if (row == -1) return;   // the selection was cleared (e.g. by clearForm), so leave the form alone
+        if (row == -1) return;   // handles anything about clearing the form, so it just stops
 
         nameField.setText(text(tableModel.getValueAt(row, 1)));
         yearField.setText(text(tableModel.getValueAt(row, 2)));
@@ -285,10 +287,9 @@ public class MembersPanel extends JPanel {
         JOptionPane.showMessageDialog(this, message, "Invalid input", JOptionPane.WARNING_MESSAGE);
     }
 
-    // so this turns the scary technical SQLException into a message a normal person understands, and shows it in a red error popup
-    // "action" is just a few words about what we were doing, e.g. "deleting the member", used in the fallback message
+    // error handling such that, when a sql error is encountered, it is parsed into a user friendly popup, the "action" part explains what the user was trying to do
     private void showDatabaseError(SQLException ex, String action) {
-        ex.printStackTrace();   // the full technical details still go to the console for us developers to debug, the user just doesn't see them
+        ex.printStackTrace();   
 
         String message;
         if (ex.getErrorCode() == 1062) {
@@ -301,7 +302,7 @@ public class MembersPanel extends JPanel {
             // 1049 = unknown database, the club_db script was never run
             message = "The database club_db was not found. Run the club_db.sql script first.";
         } else if (ex.getSQLState() != null && ex.getSQLState().startsWith("08")) {
-            // SQLState codes starting with 08 mean "connection problem", this is what we get when MySQL is switched off
+            // when mysql is switched off, this error message is displayed
             message = "Cannot reach the database. Please check that MySQL is running and try again.";
         } else {
             // anything we didn't plan for still gets a clear popup instead of a crash

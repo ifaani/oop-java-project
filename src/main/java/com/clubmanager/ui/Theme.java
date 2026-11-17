@@ -14,6 +14,7 @@ public class Theme {
     public static final Color CARD          = Color.WHITE;
     public static final Color ACCENT        = new Color(0x2563EB);  // blue
     public static final Color DANGER        = new Color(0xDC2626);  // red
+     public static final Color SUCCESS       = new Color(0x16A34A);  // green
     public static final Color TEXT          = new Color(0x1F2937);  // near-black
     public static final Color MUTED         = new Color(0x6B7280);  // gray text
     public static final Color BORDER        = new Color(0xE5E7EB);  // light gray lines
@@ -57,6 +58,10 @@ public class Theme {
         return styledButton(text, DANGER, Color.WHITE);
     }
 
+    public static JButton successButton(String text) {
+        return styledButton(text, SUCCESS, Color.WHITE);
+    }
+
     public static JButton secondaryButton(String text) {
         return styledButton(text, BORDER, TEXT);
     }
@@ -69,6 +74,18 @@ public class Theme {
                 BorderFactory.createLineBorder(BORDER),
                 BorderFactory.createEmptyBorder(16, 16, 16, 16)));
         return panel;
+    }
+    // so this styles any JTable the same way our Members table looks (taller rows, no grid lines, soft blue highlight, bold header), the placeholder pages use it so they match the Members page without copy pasting the styling
+    public static void styleTable(JTable table) {
+        table.setFont(BODY);
+        table.setRowHeight(34);
+        table.setShowGrid(false);
+        table.setIntercellSpacing(new Dimension(0, 0));
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setSelectionBackground(new Color(0xDBEAFE));
+        table.setSelectionForeground(TEXT);
+        table.getTableHeader().setFont(BOLD);
+        table.getTableHeader().setReorderingAllowed(false);
     }
 
     // So now this is the method that styles the buttons, this is the method called by the other three above, it styles each button using the parameters defined in the three methods above
